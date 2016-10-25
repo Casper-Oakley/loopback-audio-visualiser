@@ -128,3 +128,45 @@
         margin-right: 0;
     }
 }
+
+
+.color-bar {
+  margin-left: 97%;
+  margin-right: 0;
+  position: absolute;
+  width: 3%;
+  top: 0%;
+  bottom: 75%;
+}
+
+.red-bar {
+  background-color: #EE2E31;
+}
+
+.yellow-bar {
+  background-color: #C4B574;
+  top: 25%;
+  bottom: 50%;
+}
+
+.green-bar {
+  background-color: #65743A;
+  top: 50%;
+  bottom: 25%;
+}
+
+.blue-bar {
+  background-color: #0B5563;
+  top: 75%;
+  bottom: 0%;
+}
+
+.square {
+  border-radius: 4px;
+  float: left;
+  width: 30px;
+  min-height: 20px;
+  margin: 0px 0px 5px 5px;
+  background-color: #FF0000;
+  border: solid 2px;
+}
