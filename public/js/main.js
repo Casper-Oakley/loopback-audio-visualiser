@@ -1,27 +1,36 @@
 //Angular app
-var app = angular.module('myApp', []);
+var app = angular.module('myApp', ['ngAnimate']);
 
-app.controller('myCtrl', function($scope, $http) {
+app.controller('myCtrl', function($scope, $http, socket) {
   $scope.values = [];
-  $scope.max = 32;
-  for(var i=0;i<32;i++){
+  $scope.max = 100000;
+  $scope.min = 0;
+  for(var i=0;i<256;i++){
     $scope.values[i] = i;
   }
 
   //Function to get the string for rgb for each pixel
   $scope.readingToHex = function(x) {
-    rgb = HSVtoRGB(x/$scope.max, 1, 1);
+    rgb = HSVtoRGB(Math.abs(x-$scope.min)/Math.abs(x-$scope.max), 1, 1);
     return '#' +
            paddedToString(rgb.r) + 
            paddedToString(rgb.g) + 
            paddedToString(rgb.b);
   };
 
+  socket.on('reading', function (data) {
+    $scope.values = data.readings;
+    $scope.max = data.max;
+    $scope.min = data.min;
+  });
+
   $scope.valueToStyle = function(x) {
     return {
       "background-color": $scope.readingToHex(x)
     };
   };
+
+  
 
 });
 
@@ -62,7 +71,7 @@ function HSVtoRGB(h, s, v) {
 
 //Factory causing reapplies on any on event and emit event firing
 app.factory('socket', function ($rootScope) {
-  var socket = io.connect();
+  var socket = io.connect('http://localhost:3000');
   return {
     on: function (eventName, callback) {
       socket.on(eventName, function () {  

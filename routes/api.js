@@ -4,8 +4,7 @@ var express = require('express'),
 
 //List of endpoint sets
 var endpoints = {
-  accounts: './api/accounts',
-  readings: './api/readings'
+  accounts: './api/accounts'
 };
 
 //Require and attach to router each endpoint
