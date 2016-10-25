@@ -20,5 +20,14 @@
   "bugs": {
     "url": "https://github.com/Casper-Oakley/loopback-audio-visualiser/issues"
   },
-  "homepage": "https://github.com/Casper-Oakley/loopback-audio-visualiser#readme"
+  "homepage": "https://github.com/Casper-Oakley/loopback-audio-visualiser#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.5",
+    "morgan": "^1.7.0",
+    "path": "^0.12.7"
+  }
 }
