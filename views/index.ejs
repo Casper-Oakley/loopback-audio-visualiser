@@ -1,5 +1,22 @@
     <% include header %>
-    <div class="container">
-      <p>Hello world!</p>
-    </div>
+
+        <% include sidebar %>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper" ng-app="myApp" ng-controller="myCtrl">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Audio Visualisation</h1>
+                        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                        <p>Below are the squares, each representing an LED.</p>
+                        <div class="square" ng-repeat="a in values" ng-style="valueToStyle(a)"><span ng-bind="a"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    <% include sidebar-footer %>
+
     <% include footer %>
