@@ -1,0 +1,27 @@
+{
+  "name": "loopback-audio-visualiser",
+  "description": "A NodeJS applet to read music data from a rabbitMQ exchange and render it",
+  "main": "app.js",
+  "authors": [
+    "Casper Oakley"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Audio",
+    "NodeJS",
+    "Visualisation"
+  ],
+  "homepage": "https://github.com/Casper-Oakley/loopback-audio-visualiser",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "angular": "^1.5.8"
+  }
+}

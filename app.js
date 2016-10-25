@@ -2,6 +2,7 @@ var express = require('express'),
     path = require('path'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
+    favicon = require('serve-favicon'),
     bodyParser = require('body-parser');
 
 var index = require('./routes/index'),
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
+app.use(favicon(path.join(__dirname,'public','img','favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
