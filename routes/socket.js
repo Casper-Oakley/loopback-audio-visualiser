@@ -14,7 +14,7 @@ module.exports = function (socket) {
           //On message received...
           ch.consume('primary-queue', function(msg) {
             var readings = msg.content.toString().split(',').map(function(e) {
-              return parseFloat(e);
+              return Math.abs(parseFloat(e));
             });
             //Send readings to every socket
             socket.sockets.emit('reading', {readings: readings,

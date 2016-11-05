@@ -6,12 +6,12 @@ app.controller('myCtrl', function($scope, $http, socket) {
   $scope.max = 100000;
   $scope.min = 0;
   for(var i=0;i<256;i++){
-    $scope.values[i] = i;
+    $scope.values[i] = 0;
   }
 
   //Function to get the string for rgb for each pixel
   $scope.readingToHex = function(x) {
-    rgb = HSVtoRGB(Math.abs(x-$scope.min)/Math.abs(x-$scope.max), 1, 1);
+    rgb = HSVtoRGB((2.0/3)* (1 - (Math.abs(x-$scope.min)/Math.abs(x-$scope.max))), 1, 1);
     return '#' +
            paddedToString(rgb.r) + 
            paddedToString(rgb.g) + 
