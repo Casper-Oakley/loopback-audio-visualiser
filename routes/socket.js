@@ -1,5 +1,9 @@
 var amqp = require('amqplib/callback_api');
 
+
+var hue = 0;
+
+
 module.exports = function (socket) {
   amqp.connect('amqp://localhost', function(err, conn) {
     if(err) {
@@ -13,13 +17,9 @@ module.exports = function (socket) {
           
           //On message received...
           ch.consume('primary-queue', function(msg) {
-            var readings = msg.content.toString().split(',').map(function(e) {
-              return Math.abs(parseFloat(e));
-            });
-            var max = Math.max.apply(Math, readings),
-                min = Math.min.apply(Math, readings);
-            readings = readings.map(function(e) {
-              return readingToRGB(e, max, min);
+            var readings = msg.content.toString().split(',');
+            var readings = readings.map(function(e, i) {
+              return readingToRGB(Math.abs(parseFloat(e)), 1, 0, i, readings.length);
             });
             //console.log(readings);
             //Send readings to every socket
@@ -37,8 +37,14 @@ module.exports = function (socket) {
   
 };
 
-var readingToRGB = function(x, max, min) {
-  return HSVtoRGB((2.0/3) * (1 - (Math.abs(x-min)/Math.abs(max-min))), 1, 1);
+
+//Timer for the slow changing of hue
+setInterval(function() {
+  hue = ++hue%360;
+}, 100);
+
+var readingToRGB = function(x, max, min, index, length) {
+  return HSVtoRGB((hue+(index*120)/length)/360, 0.8, (Math.abs(x-min)/Math.abs(max-min)));
 };
 
 
