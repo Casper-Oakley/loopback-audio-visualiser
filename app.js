@@ -47,7 +47,12 @@ var server = app.listen(3000, function() {
   console.log('App listening at http://' + host + ':' + port);
 });
 
-var io = require('socket.io').listen(server);
-require('./routes/socket')(io);
+//attach socketIO to server and send it to LED
+//Then send LED to anyone that wants to edit the LEDs
+var io  = require('socket.io').listen(server),
+    led = require('./led')(io);
+
+
+require('./routes/socket')(led);
 
 module.exports = app;
