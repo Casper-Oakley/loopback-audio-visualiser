@@ -164,9 +164,47 @@
 .square {
   border-radius: 4px;
   float: left;
-  width: 30px;
+  width: 2.6%;
   min-height: 20px;
   margin: 0px 0px 5px 5px;
   background-color: #FF0000;
   border: solid 2px;
+  text-align: center;
+}
+
+.square-container {
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.control-panel {
+  margin: 100px;
+}
+
+.control-panel-right {
+  text-align: right;
+}
+
+.setting-window {
+  border-radius: 10px;
+  border: 2px solid #BCC6D4;
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+  min-height: 400px;
+}
+
+.results-box {
+  border-radius: 5px;
+}
+
+.result {
+  text-align: right;
+  padding: 2px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.result-selected {
+  background-color: #8CD6DB;
 }
