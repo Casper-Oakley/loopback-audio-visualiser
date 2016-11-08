@@ -45,7 +45,7 @@ module.exports = function(led) {
       matrix.convertHSVscale();
       hsvMats = matrix.split();
 
-      var num_bins = 256,
+      var num_bins = 180,
           num_cols = 4;
 
       var hueHistogram = new Array(num_bins).fill(0),
@@ -53,7 +53,7 @@ module.exports = function(led) {
       //Produce a hue histogram manually (thnx node opencv bindings for being absolutely useless)
       for(var x=0; x < hsvMats[0].width(); x++) {
         for(var y=0; y < hsvMats[0].height(); y++) {
-          var index = Math.floor(num_bins*hsvMats[0].pixel(y,x)/256);
+          var index = Math.floor(num_bins*hsvMats[0].pixel(y,x)/180);
           hueHistogram[index]++;
         }
       }
@@ -61,7 +61,7 @@ module.exports = function(led) {
       //And the same for sat histogram
       for(var x=0; x < hsvMats[1].width(); x++) {
         for(var y=0; y < hsvMats[1].height(); y++) {
-          var index = Math.floor(num_bins*hsvMats[1].pixel(y,x)/256);
+          var index = Math.floor(num_bins*hsvMats[1].pixel(y,x)/180);
           satHistogram[index]++;
         }
       }
@@ -78,7 +78,7 @@ module.exports = function(led) {
       });
 
       //Finally send new hue and sat functions to LEDs
-      //Plot a set of linear lines to calculate expected hue
+      //Plot a set of linear functions to calculate expected hue
       //length = 60, num_cols = 4, i = 40
       // xdiff = 15 (each bracket is 15
       // binLoc = floor(40/15) = 2
@@ -94,11 +94,18 @@ module.exports = function(led) {
         var binLoc = Math.floor(i/xdiff);
         var l = topHues[binLoc],
             r = topHues[(binLoc+1)%num_cols];
+        //Need to account for the "wrapping" nature of hues
+        if(l-r > 0.5) {
+          r++;
+        } else if(r-l > 0.5) {
+          l++;
+        }
         //Generate a line between two nearest points
         var ydiff = r - l;
         var m = ydiff/xdiff;
         var c = l - m*xdiff*binLoc;
-        return m*i + c;
+        //Need the modulo to again account for wrapping nature
+        return (m*i + c)%1;
       });
 
       res.status(200).send();
