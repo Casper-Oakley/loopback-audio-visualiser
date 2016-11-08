@@ -1,5 +1,7 @@
-var hue = function(index, length, time){return 1;},
-    sat = function(index, length, time){return 1;};
+var defaults = require('./defaults');
+
+var hue = defaults.hue,
+    sat = defaults.sat;
 
 module.exports = function(socket) {
   socket.on('connection', function() {

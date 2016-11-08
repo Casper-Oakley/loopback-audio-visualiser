@@ -10,7 +10,30 @@
                         <h1>Audio Visualisation</h1>
                         <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
                         <p>Below are the squares, each representing an LED.</p>
-                        <div class="square" ng-repeat="a in values" ng-style="valueToStyle(a)"><span ng-bind="a"></span></div>
+                        <div class="square-container">
+                          <div class="square" ng-repeat="a in values" ng-style="valueToStyle(a)"><span ng-bind="a"></span></div>
+                        </div>
+                        <div class="control-panel">
+                          <div class="col-md-4 setting-window">
+                            <h4>Basic Colour Settings</h4>
+                            <hr>
+                            <button type="button" class="btn btn-primary" ng-click="toDefault()">Default</button>
+                            <button type="button" class="btn btn-danger" ng-click="toColour('FF0000')">Red</button>
+                            <input class="color" value="ff0000" ng-model="currentColour" ng-change="toColour(currentColour)">
+                          </div>
+                          <div class="col-md-4 setting-window">
+                            <h4>LastFM Album Lookup</h4>
+                            <hr>
+                            <input type="text" class="form-control" placeholder="Search for an album here..." ng-model="album" ng-change="search(album)">
+                            <div class="results-box">
+                              <div class="result" ng-repeat="a in albums">
+                                <span ng-bind="a.text"></span>
+                                <img ng-src="{{a.img_sm}}">
+                              </div>
+                            </div>
+                            <hr>
+                          </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -32,4 +32,6 @@ router.get('/', function(req, res) {
   });
 });
 
-module.exports = router;
+module.exports = function(led) {
+  return router;
+};

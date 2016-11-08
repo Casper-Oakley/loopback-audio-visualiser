@@ -6,8 +6,7 @@ var express = require('express'),
     favicon = require('serve-favicon'),
     bodyParser = require('body-parser');
 
-var index = require('./routes/index'),
-    api = require('./routes/api');
+var index = require('./routes/index');
 
 var app = express();
 
@@ -28,17 +27,8 @@ app.use(favicon(path.join(__dirname,'public','img','favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/api/v1/', api);
-
 app.use('/', index);
 
-
-//Any uncaught routes go to 404
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
 
 //Once server instance setup, run socket IO
 var server = app.listen(3000, function() {
@@ -54,5 +44,17 @@ var io  = require('socket.io').listen(server),
 
 
 require('./routes/socket')(led);
+
+//Api needs to use LEDS
+api = require('./routes/api')(led);
+app.use('/api/', api);
+
+
+//Any uncaught routes go to 404
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
 module.exports = app;

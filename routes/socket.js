@@ -1,4 +1,5 @@
-var amqp = require('amqplib/callback_api');
+var amqp     = require('amqplib/callback_api'),
+    defaults = require('../defaults');
 
 
 var hue = 0;
@@ -28,16 +29,6 @@ module.exports = function (led) {
       });
     }
   });
-
-  //Set Hue and Sat functions
-  led.setHue(function(i, length, t) {
-    return ((t%360) + (i*120)/length)/360;
-  });
-
-  led.setSat(function(i, length, t) {
-    return 0.8;
-  });
-
 };
 
 
