@@ -7,6 +7,8 @@ app.controller('myCtrl', function($scope, $http, socket) {
   $scope.values = [];
   $scope.album = '';
   $scope.albums = [];
+  $scope.bins_count = 16;
+  $scope.colour_count = 4;
 
   for(var i=0;i<256;i++){
     $scope.values[i] = 0;
@@ -83,7 +85,9 @@ app.controller('myCtrl', function($scope, $http, socket) {
       method: 'POST',
       url:    '/api/settings/album',
       data: {
-        url: album.img_lg
+        url: album.img_lg,
+        bins: parseInt($scope.bins_count),
+        colours: parseInt($scope.colour_count),
       }
     });
   };

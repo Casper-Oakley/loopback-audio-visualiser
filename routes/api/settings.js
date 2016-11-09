@@ -38,7 +38,7 @@ module.exports = function(led) {
 
     //Set defaults for optional parameters
     if(!req.body.bins) {
-      req.body.bins = 32;
+      req.body.bins = 16;
     }
     if(!req.body.colours) {
       req.body.colours = 4;
@@ -56,33 +56,21 @@ module.exports = function(led) {
       var num_bins = req.body.bins,
           num_cols = req.body.colours;
 
-      var hueHistogram = new Array(num_bins).fill(0),
-          satHistogram = new Array(num_bins).fill(0);
-      //Produce a hue histogram manually (thnx node opencv bindings for being absolutely useless)
+      var hueSatHistogram = zeros([num_bins, num_bins]);
+      //Produce a hue-sat histogram manually (thnx node opencv bindings for being absolutely useless)
+      //Note: X is hue, Y is sat
       for(var x=0; x < hsvMats[0].width(); x++) {
         for(var y=0; y < hsvMats[0].height(); y++) {
-          var index = Math.floor(num_bins*hsvMats[0].pixel(y,x)/180);
-          hueHistogram[index]++;
+          var indexX = Math.floor(num_bins*hsvMats[0].pixel(y,x)/180);
+          var indexY = Math.floor(num_bins*hsvMats[1].pixel(y,x)/256);
+          hueSatHistogram[indexX][indexY]++;
         }
       }
 
-      //And the same for sat histogram
-      for(var x=0; x < hsvMats[1].width(); x++) {
-        for(var y=0; y < hsvMats[1].height(); y++) {
-          var index = Math.floor(num_bins*hsvMats[1].pixel(y,x)/180);
-          satHistogram[index]++;
-        }
-      }
-
-      var topHues = getTopEntries(hueHistogram, num_cols),
-          topSats = getTopEntries(satHistogram, num_cols);
-
-      topHues = topHues.map(function(e) {
-        return e/num_bins;
-      });
+      var topResults = getTopEntries2D(hueSatHistogram, num_cols);
       //Saturations should be a minimum amount (TODO should they tho??)
-      topSats = topSats.map(function(e) {
-        return 0.5 + 0.5*e/num_bins;
+      topResults = topResults.map(function(e) {
+        return [e[0]/num_bins, 0.3 + 0.7*e[1]/num_bins];
       });
 
       //Finally send new hue and sat functions to LEDs
@@ -100,8 +88,29 @@ module.exports = function(led) {
         i = (i + Math.floor(t/6))%length;
         var xdiff = length/num_cols;
         var binLoc = Math.floor(i/xdiff);
-        var l = topHues[binLoc],
-            r = topHues[(binLoc+1)%num_cols];
+        var l = topResults[binLoc][0],
+            r = topResults[(binLoc+1)%num_cols][0];
+        //Need to account for the "wrapping" nature of hues
+        if(l-r > 0.5) {
+          r++;
+        } else if(r-l > 0.5) {
+          l++;
+        }
+        //Generate a line between two nearest points
+        var ydiff = r - l;
+        var m = ydiff/xdiff;
+        var c = l - m*xdiff*binLoc;
+        //Need the modulo to again account for wrapping nature
+        return (m*i + c)%1;
+      });
+
+      //Do the same for saturation
+      led.setSat(function(i, length, t) {
+        i = (i + Math.floor(t/6))%length;
+        var xdiff = length/num_cols;
+        var binLoc = Math.floor(i/xdiff);
+        var l = topResults[binLoc][1],
+            r = topResults[(binLoc+1)%num_cols][1];
         //Need to account for the "wrapping" nature of hues
         if(l-r > 0.5) {
           r++;
@@ -136,3 +145,36 @@ var getTopEntries = function(arr, n) {
     });
   });
 };
+
+var getTopEntries2D = function(arr, n) {
+  var maxes = zeros([n]),
+      maxIndexes = zeros([n,2]);
+  for(var x=0; x<arr.length; x++) {
+    for(var y=0; y<arr[x].length; y++) {
+      for(var i=0; i<n; i++) {
+        if(arr[x][y] > maxes[i]) {
+          maxes[i] = arr[x][y];
+          maxIndexes[i][0] = x;
+          maxIndexes[i][1] = y;
+          maxes.sort(function(a, b) { 
+            return b - a;
+          });
+          break;
+        }
+      }
+    }
+  }
+  return maxIndexes;
+};
+
+
+//Function to generate a zero filled array
+var zeros = function(dimensions) {
+    var array = [];
+
+    for (var i = 0; i < dimensions[0]; ++i) {
+        array.push(dimensions.length == 1 ? 0 : zeros(dimensions.slice(1)));
+    }
+
+    return array;
+}
