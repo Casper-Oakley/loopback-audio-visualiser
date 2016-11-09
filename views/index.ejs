@@ -15,18 +15,29 @@
                         </div>
                         <div class="control-panel">
                           <div class="col-md-4 setting-window">
-                            <h4>Basic Colour Settings</h4>
+                            <h4>Simple Colour Settings</h4>
                             <hr>
                             <button type="button" class="btn btn-primary" ng-click="toDefault()">Default</button>
                             <button type="button" class="btn btn-danger" ng-click="toColour('FF0000')">Red</button>
                             <input class="color" value="ff0000" ng-model="currentColour" ng-change="toColour(currentColour)">
+                            <hr>
+                            <h4>Advanced Album Settings</h4>
+                            <hr>
+                            <div class="extra-album-settings">
+                              <div class="col-sm-6">
+                                Amount of bins <input class="form-control input-sm" type="text" value="16" placeholder="16" ng-model="bins_count">
+                              </div>
+                              <div class="col-sm-6">
+                                Amount of colours <input class="form-control input-sm" type="text" value="4" placeholder="4" ng-model="colour_count">
+                              </div>
+                            </div>
                           </div>
                           <div class="col-md-4 setting-window">
                             <h4>LastFM Album Lookup</h4>
                             <hr>
                             <input type="text" class="form-control" placeholder="Search for an album here..." ng-model="album" ng-change="search(album)">
                             <div class="results-box">
-                              <div class="result" ng-repeat="a in albums">
+                              <div class="result" ng-repeat="a in albums" ng-click="updateSelection($index, albums)" ng-class="a.checked ? 'result-selected' : ''">
                                 <span ng-bind="a.text"></span>
                                 <img ng-src="{{a.img_sm}}">
                               </div>
