@@ -36,6 +36,14 @@ module.exports = function(led) {
       res.status(400).send();
     }
 
+    //Set defaults for optional parameters
+    if(!req.body.bins) {
+      req.body.bins = 32;
+    }
+    if(!req.body.colours) {
+      req.body.colours = 4;
+    }
+
     cvStream.on('load', function(matrix) {
       matrixArr = matrix.split();
       if(matrixArr.length == 4) {
@@ -45,8 +53,8 @@ module.exports = function(led) {
       matrix.convertHSVscale();
       hsvMats = matrix.split();
 
-      var num_bins = 180,
-          num_cols = 4;
+      var num_bins = req.body.bins,
+          num_cols = req.body.colours;
 
       var hueHistogram = new Array(num_bins).fill(0),
           satHistogram = new Array(num_bins).fill(0);

@@ -64,7 +64,8 @@ app.controller('myCtrl', function($scope, $http, socket) {
         return {
          text   : e.artist + ': ' + e.name,
          img_sm : e.image[0]['#text'],
-         img_lg : e.image[e.image.length-1]['#text']
+         img_lg : e.image[e.image.length-1]['#text'],
+         checked   : false
         };
         
       });
@@ -73,7 +74,19 @@ app.controller('myCtrl', function($scope, $http, socket) {
     });
   };
 
-  
+  $scope.updateSelection = function(ind, collection) {
+    angular.forEach(collection, function(e, i) {
+      e.checked = i==ind;
+    });
+    var album = collection[ind];
+    $http({
+      method: 'POST',
+      url:    '/api/settings/album',
+      data: {
+        url: album.img_lg
+      }
+    });
+  };
 
 });
 

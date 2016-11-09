@@ -26,7 +26,7 @@
                             <hr>
                             <input type="text" class="form-control" placeholder="Search for an album here..." ng-model="album" ng-change="search(album)">
                             <div class="results-box">
-                              <div class="result" ng-repeat="a in albums">
+                              <div class="result" ng-repeat="a in albums" ng-click="updateSelection($index, albums)" ng-class="a.checked ? 'result-selected' : ''">
                                 <span ng-bind="a.text"></span>
                                 <img ng-src="{{a.img_sm}}">
                               </div>
