@@ -1,9 +1,11 @@
-var defaults = require('./defaults');
+var defaults   = require('./defaults'),
+    blinkstick = require('blinkstick');
 
 var hue = defaults.hue,
     sat = defaults.sat;
 
 module.exports = function(socket) {
+  var device = blinkstick.findFirst();
   socket.on('connection', function() {
     console.log('New Connection!!');
   });
@@ -21,6 +23,13 @@ module.exports = function(socket) {
       values = values.map(function(e, i) {
         return HSVtoRGB(hue(i, values.length, timeElapsed), sat(i, values.length, timeElapsed), e);
       });
+      var colours = [];
+      for(x in values) {
+        colours.push(values[x].g);
+        colours.push(values[x].r);
+        colours.push(values[x].b);
+      }
+      device.setColors(0, colours, function(){});
       socket.sockets.emit('reading', { readings: values });
     }
   };
