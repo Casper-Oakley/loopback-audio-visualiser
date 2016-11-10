@@ -5,6 +5,7 @@ var express = require('express'),
 //List of endpoint sets
 var endpoints = {
   accounts: './api/accounts',
+  music: './api/music',
   settings: './api/settings'
 };
 
