@@ -1,6 +1,10 @@
-    <% include header %>
+    <% include templates/header %>
+    <script src="js/main.js"></script>
+  </head>
 
-        <% include sidebar %>
+  <body>
+
+        <% include templates/sidebar %>
 
         <!-- Page Content -->
         <div id="page-content-wrapper" ng-app="myApp" ng-controller="myCtrl">
@@ -51,6 +55,6 @@
         </div>
         <!-- /#page-content-wrapper -->
 
-    <% include sidebar-footer %>
+    <% include templates/sidebar-footer %>
 
-    <% include footer %>
+    <% include templates/footer %>

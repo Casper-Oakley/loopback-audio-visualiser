@@ -2,15 +2,21 @@ var express  = require('express'),
     fs       = require('fs'),
     defaults = require('../../defaults'),
     cv       = require('opencv'),
+    async    = require('async'),
     request  = require('request'),
     router   = express.Router();
 
 //led module is passed in through requires
 module.exports = function(led) {
 
+  //Name for the lastfm watcher (and current album)
+  var lastfmName = 'iraq19',
+      currentAlbumUrl = '';
+
   router.post('/default', function(req, res) {
     led.setHue(defaults.hue);
     led.setSat(defaults.sat);
+    currentAlbumUrl = '';
     res.status(200).send();
   });
 
@@ -23,6 +29,7 @@ module.exports = function(led) {
     led.setSat(function(i, length, t) {
       return req.body.sat;
     });
+    currentAlbumUrl = '';
     res.status(200).send();
   });
 
@@ -39,9 +46,57 @@ module.exports = function(led) {
         req.body.colours = 4;
       }
       colourFromImage(req.body.url, req.body.bins, req.body.colours, led, function() {
+        currentAlbumUrl = req.body.url;
         res.status(200).send();
       });
     }
+  });
+
+
+  router.post('/watcher', function(req, res) {
+    lastfmName = req.body.username;
+    if(!lastfmName) {
+      led.setHue(defaults.hue);
+      led.setSat(defaults.sat);
+      currentAlbumUrl = '';
+    }
+    res.status(200).send();
+  });
+
+
+  //async whilst loop to watch for album change on lastfm
+  async.whilst(function() { return true;},
+    function(cb) {
+      setTimeout(function() {
+        if(lastfmName) {
+          var recentUrl = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks' + 
+            '&api_key=351f3b3acf21f9eeb961fe76241f686c' + 
+            '&format=json' +
+            '&user=' + lastfmName +
+            '&limit=1';
+          request(recentUrl, function(err, res, body) {
+            body = JSON.parse(body);
+            if(!err && 
+              body &&
+              body.recenttracks && 
+              body.recenttracks.track[0] && 
+              body.recenttracks.track[0]['@attr'] &&
+              body.recenttracks.track[0].image[3]['#text'] != currentAlbumUrl) {
+              colourFromImage(body.recenttracks.track[0].image[3]['#text'], 16, 4, led, function() {
+                currentAlbumUrl = body.recenttracks.track[0].image[3]['#text'];
+                cb(null);
+              });
+            } else {
+              cb(null);
+            }
+          });
+        } else {
+          cb(null);
+        }
+      }, 1000);
+    },
+    function(err) {
+      console.log('Unexpected error.');
   });
 
 
@@ -131,6 +186,8 @@ var colourFromImage = function(url, bins, colours, led, callback) {
       //Need the modulo to again account for wrapping nature
       return (m*i + c)%1;
     });
+
+    return callback();
 
   });
 };
