@@ -64,6 +64,11 @@ module.exports = function(led) {
   });
 
 
+  router.get('/album', function(req, res) {
+    res.status(200).send(currentAlbumUrl);
+  });
+
+
   //async whilst loop to watch for album change on lastfm
   async.whilst(function() { return true;},
     function(cb) {

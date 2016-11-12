@@ -12,7 +12,7 @@ var args      = [],
 module.exports = function(led) {
 
 
-  router.post('/status', function(req, res) {
+  router.get('/status', function(req, res) {
     res.status(200).json({
       status: loopChild.pid>=0?'Running':'Stopped',
       pid: loopChild.pid
