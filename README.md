@@ -1,5 +1,6 @@
 # loopback-audio-visualiser
-A NodeJS applet to read music data from a rabbitMQ exchange and render it.
+A NodeJS applet built for visualising sound! This applet reads in data sent to it from it's sister application, [music-loop](https://github.com/casper-oakley/music-loop), applies colours to it and renders it, both on an angular based web frontend, as well as rendering it to any connected blinkstick LED strips. The colours are either selectable by searching for an album, by selecting a static colour, or by the system watching a LastFM account, to see what the account is currently listening to.
+
 
 ## Getting Started
 
