@@ -6,6 +6,7 @@
   "scripts": {
     "test": "nodejs app.js"
   },
+  "gypfile": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Casper-Oakley/loopback-audio-visualiser.git"
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/Casper-Oakley/loopback-audio-visualiser#readme",
   "dependencies": {
     "amqplib": "^0.4.2",
+    "bindings": "^1.2.1",
     "blinkstick": "^1.1.3",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
@@ -31,6 +33,7 @@
     "http": "0.0.0",
     "mongoose": "^4.6.5",
     "morgan": "^1.7.0",
+    "nan": "^2.4.0",
     "opencv": "^6.0.0",
     "path": "^0.12.7",
     "serve-favicon": "^2.3.0",
