@@ -1,4 +1,38 @@
-<% include header %>
-  <% include sidebar %>
-  <% include sidebar-footer %>
-<% include footer %>
+<% include templates/header %>
+    <script src="js/settings.js"></script>
+  </head>
+
+  <body>
+  <% include templates/sidebar %>
+
+    <div id="page-content-wrapper" ng-app="myApp" ng-controller="myCtrl">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="col-md-4 setting-window">
+              <h4>Output sound watcher settings</h4>
+              <hr>
+              <div class="row">
+                <div class="col-md-4">
+                  <h5><span ng-bind="watcherStatus"></span></h5>
+                </div>
+                <div class="col-md-8">
+                  <button class="btn btn-success" ng-click="post('music/start')">start</button>
+                  <button class="btn btn-danger" ng-click="post('music/stop')">stop</button>
+                  <button class="btn btn-primary" ng-click="post('music/restart')">restart</button>
+                </div>
+              </div>
+              <hr>
+              <h4>LastFM watcher settings</h4>
+              <hr>
+              <div class="row">
+                <img ng-src="{{currentAlbumStatus}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <% include templates/sidebar-footer %>
+<% include templates/footer %>
